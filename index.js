@@ -1,30 +1,47 @@
-const express=require("express")
-const mongoose = require('mongoose');
+express=require("express")
+model=require("./product.module.js")
 server=express()
+const mongoose=require("mongoose")
+server.use(express.json())
 
-server.get('/',(req,res)=>{
-    res.json({type:"get"})
-})
-server.post('/',(req,res)=>{
-    res.json({type:"post"})
-})
-server.put('/',(req,res)=>{
-    res.json({type:"put"})
-})
-server.delete('/',(req,res)=>{
-    res.json({type:"delete"})
-})
-server.patch('/',(req,res)=>{
-    res.json({type:"patch"})
-})
 
-mongoose.connect("mongodb+srv://dschannappa93:T0zvkZSXpAN9LLDM@data.qzxbeyw.mongodb.net/?retryWrites=true&w=majority&appName=data")
-.then(()=>{
-    console.log("database is connected")
-})
-.catch(()=>{
-    console.log("ERROR !!data base is not connected") 
-})
-server.listen(8080,()=>{
-    console.log("server started port 8080");
+  server.get("/products", async (req, res) => {
+    try {
+      const models = await model.find({});
+      res.json(models);
+      
+    } catch (error) {
+      res.status(500).send("Internal Server Error: " + error.message);
+    }
+  })
+  server.post("/products", async (req, res) => {
+    try {
+
+      const models = await model.create(req.body);
+      res.json(models);
+      console.log(models);
+    } catch (error) {
+      res.status(500).send("Internal Server Error: " + error.message);
+    }
+  });
+
+mongoose.connect("mongodb+srv://dschannappa93:JAYFn7ZsBFYTi5XZ@database.5rkqv3i.mongodb.net/?retryWrites=true&w=majority&appName=Database")
+  .then(() => {
+    console.log("Database is connected");
+  })
+  .catch((error) => {
+    console.error("ERROR !! Database is not connected:", error);
+  });
+server.listen(3000,()=>{
+    try {
+        console.log("server is started at port 3000"); 
+        
+    } 
+    catch (error) {
+       console.log("ERROR!!! while starting the server"); 
+    }
 });
+
+
+
+
